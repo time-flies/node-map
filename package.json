@@ -6,6 +6,9 @@
     "scripts": {
         "start": "electron ."
     },
+    "dependencies": {
+        "sql.js": "^0.3.2"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/electron/electron-quick-start.git"
