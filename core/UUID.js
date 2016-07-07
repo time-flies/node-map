@@ -1,16 +1,16 @@
-class UUID {
+class UUID{
 
-    constructor() {
-        var d = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-        this._value = uuid;
-    }
+	constructor(){
+		var d = new Date().getTime();
+		var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		  var r = (d + Math.random()*16)%16 | 0;
+		  d = Math.floor(d/16);
+		  return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+		});
+		this._value = uuid;
+	}
 
-    string() {
-        return this._value;
-    }
+	string(){
+		return this._value;
+	}
 }

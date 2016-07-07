@@ -1,9 +1,9 @@
-class NodePartFactory {
-    constructor() {
+class NodePartFactory{
+	constructor(){
 
-    }
+	}
 
-    create_treenode(node) {
-        return new NodePart(node);
-    }
+	create_treenode(node){
+		return new NodePart(node);
+	}
 }
