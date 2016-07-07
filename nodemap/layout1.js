@@ -6,7 +6,7 @@ class Layout1 extends Layout{
 	constructor(){
 		super();
 		this._offsetx = 40;
-		this._offsety = 2;
+		this._offsety = 10;
 		this._gapsfactor = 1;
 	}
 
@@ -39,6 +39,9 @@ class Layout1 extends Layout{
 			}
 			hc = hc + this.calc_height(subnodes[i]);
 		}
+		if (subnodes.length > 1){
+			hc = hc + (subnodes.length - 1) * this._offsety * this._gapsfactor;
+		}
 		if (hc > h){
 			h = hc;
 		}
@@ -56,8 +59,9 @@ class Layout1 extends Layout{
 		var offsetx = node.dimension.x + this._offsetx * this._gapsfactor;
 		var subnodes = node.children;
 		for (var i = 0; i < subnodes.length; i++){
-			this._offsetdict[subnodes[i].id] = new Point(offsetx, offsetc + (this._hdict[subnodes[i].id] - subnodes[i].dimension.y) / 2 - offsetp);
-			offsetc = offsetc + this._hdict[subnodes[i].id];
+			var offsety = offsetc + (this._hdict[subnodes[i].id] - subnodes[i].dimension.y) / 2 - offsetp;
+			this._offsetdict[subnodes[i].id] = new Point(offsetx, offsety);
+			offsetc = offsetc + this._hdict[subnodes[i].id] + this._offsety * this._gapsfactor;
 			this.calc_children_offset(subnodes[i]);
 		}	
 	}

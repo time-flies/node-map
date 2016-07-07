@@ -125,28 +125,28 @@ class NodePart extends EventHandler{
 		if (this._children.length == 0){
 			return null;
 		}
+		var x_list = [];
 		var y_list = [];
 		for (var i = 0; i < this._children.length; i++){
+			x_list.push(this._children[i].offset.x);
 			var temp = this._children[i].offset.y + this._children[i].dimension.y / 2;
 			y_list.push(temp);
 		}
-		var x1 = this.dimension.x + 20;
-		var x2 = this.dimension.x + 40;
 		var ns = "http://www.w3.org/2000/svg";
 		var connection = document.createElementNS(ns, "g");
 		for (var i = 0; i < y_list.length; i++){
 			var line = document.createElementNS(ns, "line");
-			line.setAttribute("x1", x1);
+			line.setAttribute("x1", this.dimension.x + 20);
 			line.setAttribute("y1", y_list[i]);
-			line.setAttribute("x2", x2);
+			line.setAttribute("x2", x_list[i]);
 			line.setAttribute("y2", y_list[i]);
 			line.setAttribute("style", "stroke:rgb(99,99,99);stroke-width:1");
 			connection.appendChild(line);
 		}
 		var line = document.createElementNS(ns, "line");
-		line.setAttribute("x1", x1);
+		line.setAttribute("x1", this.dimension.x + 20);
 		line.setAttribute("y1", y_list[0]);
-		line.setAttribute("x2", x1);
+		line.setAttribute("x2", this.dimension.x + 20);
 		line.setAttribute("y2", y_list[y_list.length - 1]);
 		line.setAttribute("style", "stroke:rgb(99,99,99);stroke-width:1");
 		connection.appendChild(line);
