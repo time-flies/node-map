@@ -61,18 +61,6 @@ class NodePart extends EventHandler{
 		return this._offset;
 	}
 
-	get absolute_position(){
-		var x = this._offset.x;
-		var y = this._offset.y;
-		var p = this.parent;
-		while (p != null){
-			x += p.offset.x;
-			y += p.offset.y;
-			p = p.parent;
-		}	
-		return new Point(x, y);
-	}
-
 	set tree_width(w){
 		this._treew = w;
 	}
@@ -172,7 +160,7 @@ class NodePart extends EventHandler{
 		return content;	
 	}
 
-	drop_target_feedback(){
+	drop_target_feedback(drop_operation, drop_index){
 		var ns = 'http://www.w3.org/2000/svg';
 		var content = document.createElementNS('http://www.w3.org/2000/svg', "g");
 		content.setAttribute("class", "drop_feedback");
@@ -183,6 +171,55 @@ class NodePart extends EventHandler{
 		rc.setAttribute("height", this.dimension.y);
 		rc.setAttribute("style", "stroke:blue;stroke-width:3;fill-opacity:0.1;stroke-opacity:0.9;boxSizing:border-box");
 		content.appendChild(rc);
+		var x1 = this.dimension.x;
+		var y1 = this.dimension.y / 2;
+		var x2 = 0;
+		var y2 = 0;
+		if (this._children.length == 0){
+			x2 = this.dimension.x + 60;
+			y2 = this.dimension.y / 2;			
+		}else if (drop_index >= this._children.length){
+			var index = this.children.length - 1;
+			x2 = this._children[index].offset.x + 20;
+			y2 = this._children[index].offset.y + this._children[index].dimension.y;			
+		}else if (drop_index == 0){
+			x2 = this._children[drop_index].offset.x + 20;
+			y2 = this._children[drop_index].offset.y;
+		}else{
+			x2 = this._children[drop_index].offset.x + 20;
+			y2 = (this._children[drop_index].offset.y + this._children[drop_index - 1].offset.y + this._children[drop_index - 1].dimension.y) / 2;				
+		}
+		if (y2 - y1 <= 2 && y2 - y1 >= -2){
+			var line = document.createElementNS(ns, "line");
+			line.setAttribute("x1", x1);
+			line.setAttribute("y1", y1);
+			line.setAttribute("x2", x2);
+			line.setAttribute("y2", y2);
+			line.setAttribute("style", "stroke:blue;stroke-width:3");
+			content.appendChild(line);
+		}else{
+			var line1 = document.createElementNS(ns, "line");
+			line1.setAttribute("x1", x1);
+			line1.setAttribute("y1", y1);
+			line1.setAttribute("x2", x1 + 20);
+			line1.setAttribute("y2", y1);
+			line1.setAttribute("style", "stroke:blue;stroke-width:3");
+			content.appendChild(line1);
+			var line2 = document.createElementNS(ns, "line");
+			line2.setAttribute("x1", x1 + 20);
+			line2.setAttribute("y1", y1);
+			line2.setAttribute("x2", x1 + 20);
+			line2.setAttribute("y2", y2);
+			line2.setAttribute("style", "stroke:blue;stroke-width:3");
+			content.appendChild(line2);
+			var line3 = document.createElementNS(ns, "line");
+			line3.setAttribute("x1", x1 + 20);
+			line3.setAttribute("y1", y2);
+			line3.setAttribute("x2", x2);
+			line3.setAttribute("y2", y2);
+			line3.setAttribute("style", "stroke:blue;stroke-width:3");
+			content.appendChild(line3);
+		}
 		return content;		
 	}
 

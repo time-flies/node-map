@@ -17,6 +17,7 @@ class Tree extends ModelListener{
 		this._nodes = {};
 		this._display_root = null;
 		this._display_nodes = {};
+		this._dnd_data = {}
 	}
 
 	get id(){
@@ -41,6 +42,58 @@ class Tree extends ModelListener{
 			}
 		}
 		return null;
+	}
+
+	set drag_source(source){
+		this._drag_source = source;
+	}
+
+	get drag_source(){
+		return this._drag_source;
+	}
+
+	set drop_target(target){
+		this._drop_target = target;
+	}
+
+	get drop_target(){
+		return this._drop_target;
+	}
+
+	set drop_index(index){
+		this._drop_index = index;
+	}
+
+	get drop_index(){
+		return this._drop_index;
+	}
+
+	node_location(node){
+		var temp = node;
+		var x = 0;
+		var y = 0;
+		while (temp != null){
+			x = x + temp.offset.x;
+			y = y + temp.offset.y;
+			temp = temp.parent;
+		}
+		return new Point(x, y);
+	}
+
+	estimate_drop_index(node, mousepoint){
+		var loc = this.node_location(node);
+		var rc = new Rect(loc.x, loc.y, node.dimension.x, node.dimension.y);
+		var step = rc.height / (node.children.length + 1);
+		var index = 0;
+		if (mousepoint.y > loc.y){
+			index = parseInt((mousepoint.y - loc.y - 1) / step);
+		}
+		console.log(index);
+		return index;
+	}
+
+	is_valid_drop_target(drop_target, drop_index, drag_source){
+
 	}
 
 	upadte_layout_2node(layout_dict){
@@ -145,14 +198,6 @@ class Tree extends ModelListener{
 		//tree_event(this);
 	}
 
-	set drag_source(source){
-		this._drag_source = source;
-	}
-
-	get drag_source(){
-		return this._drag_source;
-	}
-
 	add_preview_data(element, x, y){
 		var g = document.getElementById(this._id).getElementById("preview");
 		if (g == null){
@@ -214,8 +259,10 @@ class Tree extends ModelListener{
 				var temp = nodemap.find_node_at(new Point(evt.x, evt.y));
 				if (temp != null){
 					console.log("drop_target_feedback:");
-					var p = temp.absolute_position;
-					nodemap.add_preview_data(nodemap.drag_source.drop_target_feedback(), p.x, p.y);
+					nodemap.drop_target = temp;
+					nodemap.drop_index = nodemap.estimate_drop_index(temp, new Point(evt.x, evt.y));
+					var p = nodemap.node_location(temp);
+					nodemap.add_preview_data(nodemap.drop_target.drop_target_feedback("insert_child", nodemap.drop_index), p.x, p.y);
 				}
 			}
 		}
@@ -228,8 +275,10 @@ class Tree extends ModelListener{
 		document.getElementById(nodemap.id).onmouseout = function(evt){
 			console.log("on mouse out");
 			console.log(evt);
-			// nodemap.drag_source = null;	
-			// nodemap.remove_preview_data();
+		}
+
+		document.getElementById(nodemap.id).onkeypress = function(evt){
+			console.log(evt.keyCode);	
 		}
 	}
 }

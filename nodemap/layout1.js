@@ -6,7 +6,7 @@ class Layout1 extends Layout{
 	constructor(){
 		super();
 		this._offsetx = 40;
-		this._offsety = 10;
+		this._offsety = 4;
 		this._gapsfactor = 1;
 	}
 
